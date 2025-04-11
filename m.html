@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fresh Fruit Box Delivery</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #9ff669, #31ab52);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .subscription-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .subscription-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .subscription-box:hover {
+            transform: translateY(-10px);
+        }
+
+        .subscription-box.selected {
+            border: 3px solid #31ab52;
+        }
+
+        .fruit-list {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .fruit-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .delivery-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+
+        button {
+            background-color: #31ab52;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #268641;
+        }
+
+        .price {
+            font-size: 24px;
+            color: #31ab52;
+            margin: 20px 0;
+        }
+
+        #orderSummary {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Happy Fruit Box Delivery</h1>
+        <p>Choose your perfect subscription plan</p>
+    </div>
+
+    <div class="subscription-container">
+        <div class="subscription-box" onclick="selectPlan('basic')">
+            <h2>Basic Box</h2>
+            <div class="price">2199.99/month</div>
+            <ul>
+                <li>6 types of seasonal fruits</li>
+                <li>Monthly delivery</li>
+                <li>Basic fruits selection</li>
+                <li>Standard shipping</li>
+            </ul>
+        </div>
+
+        <div class="subscription-box" onclick="selectPlan('premium')">
+            <h2>Premium Box</h2>
+            <div class="price">2599.99/month</div>
+            <ul>
+                <li>10 types of premium fruits</li>
+                <li>Bi-weekly delivery</li>
+                <li>Premium exotic fruits</li>
+                <li>Free priority shipping</li>
+            </ul>
+        </div>
+
+        <div class="subscription-box" onclick="selectPlan('family')">
+            <h2>Family Box</h2>
+            <div class="price">3199.99/month</div>
+            <ul>
+                <li>15 types of mixed fruits</li>
+                <li>Weekly delivery</li>
+                <li>Mix of basic & premium fruits</li>
+                <li>Free express shipping</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="delivery-form">
+        <h2>Delivery Information</h2>
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="email" id="email" placeholder="Email Address" required>
+        <input type="tel" id="phone" placeholder="Phone Number" required>
+        <input type="text" id="address" placeholder="Delivery Address" required>
+        <button onclick="submitOrder()">Place Order</button>
+    </div>
+
+    <div id="orderSummary"></div>
+
+    <script>
+        let selectedPlan = '';
+
+        function selectPlan(plan) {
+            selectedPlan = plan;
+            document.querySelectorAll('.subscription-box').forEach(box => {
+                box.classList.remove('selected');
+            });
+            document.querySelector(`.subscription-box:nth-child(${
+                plan === 'basic' ? 1 : plan === 'premium' ? 2 : 3
+            })`).classList.add('selected');
+        }
+
+        function submitOrder() {
+            if (!selectedPlan) {
+                alert('Please select a subscription plan!');
+                return;
+            }
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+
+            if (!name || !email || !phone || !address) {
+                alert('Please fill in all delivery information!');
+                return;
+            }
+
+            const prices = {
+                basic: 29.99,
+                premium: 49.99,
+                family: 79.99
+            };
+
+            const summary = document.getElementById('orderSummary');
+            summary.style.display = 'block';
+            summary.innerHTML = `
+                <h2>Order Confirmation</h2>
+                <p><strong>Selected Plan:</strong> ${selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} Box</p>
+                <p><strong>Monthly Price:</strong> $${prices[selectedPlan]}</p>
+                <p><strong>Delivery Details:</strong></p>
+                <p>Name: ${name}</p>
+                <p>Email: ${email}</p>
+                <p>Phone: ${phone}</p>
+                <p>Address: ${address}</p>
+                <p style="color: #31ab52; margin-top: 20px;">Thank you for your order! We will contact you shortly with delivery details.</p>
+            `;
+
+            // Reset form
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('address').value = '';
+        }
+    </script>
+</body>
+</html>
